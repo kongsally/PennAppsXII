@@ -9,6 +9,7 @@ var scene,
 sphere,
 vertices_of_sphere,
 pointLight,
+ambLight,
 
 
   // Particles
@@ -25,9 +26,13 @@ init();
 var myFirebaseRef = new Firebase("https://flickering-inferno-5056.firebaseio.com/");
 var waves = [];
 var lastWave;
+var deg4 = 0.01;
+var deg7 = 255;
 
 myFirebaseRef.on('child_added', function(snapshot) {
   var rawWaves = snapshot.val();
+  console.log("Added");
+ 
   updateWaves(rawWaves);
 });
 
@@ -43,8 +48,10 @@ function updateWaves(rawWaves) {
     tempWave = waves.pop();
     cnt++;
      for (var attribute in tempWave) {
-        var deg4 = tempWave[attribute].var2 / 100;
-        lastWave = deg4;
+        var deg2 = tempWave[attribute].var2 / 1000;
+        deg4 = tempWave[attribute].var4 / 1000;
+        deg7 = tempWave[attribute].var7 / 200;
+        lastWave = deg2;
         // lastWave = new THREE.Vector3(deg4, deg4, deg4);
         scaleVals();
       }
@@ -62,6 +69,7 @@ function scaleVals() {
     // vertices_of_sphere[7].add(lastWave);
 
     pointLight.color.r = lastWave; 
+    ambLight.color.b = deg7;
     renderer.render(scene, camera);
     effect.render(scene, camera);
   }
@@ -76,10 +84,10 @@ scene.add(camera);
 
           
           // Create a sphere to make visualization easier.
-        var geometry = new THREE.IcosahedronGeometry( 30, 1);
+        var geometry = new THREE.IcosahedronGeometry( 15, 1);
         var material = new THREE.MeshPhongMaterial({
             color: 0x333333,
-            wireframe: false,
+            wireframe: true,
             transparent: false,
             morphTargetInfluences: true
         });
@@ -108,7 +116,7 @@ scene.add(camera);
         pointLight.position.z = -60;
         scene.add(pointLight);
           
-        var ambLight = new THREE.AmbientLight( 0xDDDDDD, 1.0 ); // soft white light
+        ambLight = new THREE.AmbientLight( 0xDDDDDD, 1.0 ); // soft white light
 
         scene.add(ambLight);
 
@@ -239,8 +247,8 @@ var newValx;
 
 function render(dt) {
     
+    // console.log(deg4);
     sphere.rotateY(0.01);
-    
     angle++;
     if (angle > 360){ angle = 1;}
     newVal = (Math.cos(angle%30 * Math.PI/180));
