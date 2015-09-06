@@ -1,33 +1,56 @@
 var scene,
-          camera, 
-          renderer,
-          element,
-          container,
-          effect,
-          controls,
-          clock,
-        sphere,
-        vertices_of_sphere,
-        
+  camera, 
+  renderer,
+  element,
+  container,
+  effect,
+  controls,
+  clock,
+sphere,
+vertices_of_sphere,
 
-          // Particles
-          particles = new THREE.Object3D(),
-          totalParticles = 200,
-          maxParticleSize = 200,
-          particleRotationSpeed = 0,
-          particleRotationDeg = 0,
-          lastColorRange = [0, 0.3],
-          currentColorRange = [0, 0.3];
 
-      init();
+  // Particles
+  particles = new THREE.Object3D(),
+  totalParticles = 200,
+  maxParticleSize = 200,
+  particleRotationSpeed = 0,
+  particleRotationDeg = 0,
+  lastColorRange = [0, 0.3],
+  currentColorRange = [0, 0.3];
 
-      function init() {
-        scene = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera(90, window.innerWidth /    window.innerHeight, 0.001, 700);
-        camera.position.set(0, 0, -50);
-        camera.lookAt(0, 0, 25 );
-        scene.add(camera);
-        
+init();
+
+var myFirebaseRef = new Firebase("https://flickering-inferno-5056.firebaseio.com/");
+var waves = [];
+var lastWave;
+
+myFirebaseRef.on('child_added', function(snapshot) {
+  var rawWaves = snapshot.val();
+  updateWaves(rawWaves);
+});
+
+function updateWaves(rawWaves) {
+  for (var at in rawWaves) {
+    for (var i = 0; i < rawWaves[at].length; i++) {
+      waves.push(rawWaves[at][i]);
+    }
+  }
+  console.log("total waves " + waves.length);
+  while(waves.length > 0) {
+    lastWave = waves.pop();
+    console.log(lastWave);
+    //spring using lastWave
+  }
+};
+
+function init() {
+scene = new THREE.Scene();
+camera = new THREE.PerspectiveCamera(90, window.innerWidth /    window.innerHeight, 0.001, 700);
+camera.position.set(0, 0, -50);
+camera.lookAt(0, 0, 25 );
+scene.add(camera);
+
           
           // Create a sphere to make visualization easier.
         var geometry = new THREE.IcosahedronGeometry( 30, 1);
@@ -249,11 +272,9 @@ var scene,
           lastColorRange = currentColorRange;
         }
           
-          temp = Math.random() < 0.5 ? -1 : 1;
-          console.log(temp);
-          
-          console.log(vertices_of_sphere.length);
-                vertices_of_sphere[0].x += temp;
+          temp = Math.random()  - 0.5;
+        
+          vertices_of_sphere[0].x += temp;
                 vertices_of_sphere[0].y += temp;
                 vertices_of_sphere[0].z += temp;
                 vertices_of_sphere[1].x += temp;
@@ -295,9 +316,6 @@ var scene,
 
       function update(dt) {
         resize();
-        
-
-
         camera.updateProjectionMatrix();
         controls.update(dt);
         sphere.geometry.verticesNeedUpdate = true;
