@@ -25,16 +25,18 @@ init();
 
 var myFirebaseRef = new Firebase("https://flickering-inferno-5056.firebaseio.com/");
 var waves = [];
-var lastWave;
+var lastWave = 0;
 var deg4 = 0.01;
 var deg7 = 255;
 
-myFirebaseRef.on('child_added', function(snapshot) {
+
+  myFirebaseRef.on('child_added', function(snapshot) {
   var rawWaves = snapshot.val();
   console.log("Added");
  
   updateWaves(rawWaves);
 });
+
 
 function updateWaves(rawWaves) {
   for (var at in rawWaves) {
@@ -196,28 +198,29 @@ var elapsedSeconds = clock.getElapsedTime(),
       lastColorRange = currentColorRange;
     }
   
-  temp = Math.random()  - 0.5;
- var unit_0 = vertices_of_sphere[0].clone().normalize();
-  var unit_1 = vertices_of_sphere[1].clone().normalize();
-  var unit_2 = vertices_of_sphere[2].clone().normalize();
-  var unit_3 = vertices_of_sphere[3].clone().normalize();
-  var unit_4 = vertices_of_sphere[4].clone().normalize();
-  var unit_5 = vertices_of_sphere[5].clone().normalize();
-  var unit_6 = vertices_of_sphere[6].clone().normalize();
-  var unit_7 = vertices_of_sphere[7].clone().normalize();
+  if(lastWave != 0) {
+    temp = Math.random()  - 0.5;
+    var unit_0 = vertices_of_sphere[0].clone().normalize();
+    var unit_1 = vertices_of_sphere[1].clone().normalize();
+    var unit_2 = vertices_of_sphere[2].clone().normalize();
+    var unit_3 = vertices_of_sphere[3].clone().normalize();
+    var unit_4 = vertices_of_sphere[4].clone().normalize();
+    var unit_5 = vertices_of_sphere[5].clone().normalize();
+    var unit_6 = vertices_of_sphere[6].clone().normalize();
+    var unit_7 = vertices_of_sphere[7].clone().normalize();
 
-  vertices_of_sphere[0].add(unit_0.multiplyScalar(temp));
-  vertices_of_sphere[1].add(unit_1.multiplyScalar(temp));
-  vertices_of_sphere[2].add(unit_2.multiplyScalar(temp));
-  vertices_of_sphere[3].add(unit_3.multiplyScalar(temp));
-  vertices_of_sphere[4].add(unit_4.multiplyScalar(temp));
-  vertices_of_sphere[5].add(unit_5.multiplyScalar(temp));
-  vertices_of_sphere[6].add(unit_6.multiplyScalar(temp));
-  vertices_of_sphere[6].add(unit_7.multiplyScalar(temp));
+    vertices_of_sphere[0].add(unit_0.multiplyScalar(temp));
+    vertices_of_sphere[1].add(unit_1.multiplyScalar(temp));
+    vertices_of_sphere[2].add(unit_2.multiplyScalar(temp));
+    vertices_of_sphere[3].add(unit_3.multiplyScalar(temp));
+    vertices_of_sphere[4].add(unit_4.multiplyScalar(temp));
+    vertices_of_sphere[5].add(unit_5.multiplyScalar(temp));
+    vertices_of_sphere[6].add(unit_6.multiplyScalar(temp));
+    vertices_of_sphere[6].add(unit_7.multiplyScalar(temp));
+  }
 
 
   requestAnimationFrame(animate);
-
   update(clock.getDelta());
   render(clock.getDelta());
 }
