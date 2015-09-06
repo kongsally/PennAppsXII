@@ -58,6 +58,7 @@ AEROTWIST.ReactiveBall = (function() {
       window.innerWidth/window.innerHeight, 
       0.001, 700);
     camera.position.z = 300;
+    scene.add(camera);
       
     var pointLight = new THREE.PointLight( 0xDDDDDD, 2.0 ); // soft white light
     pointLight.position.x = 60;
@@ -93,21 +94,20 @@ AEROTWIST.ReactiveBall = (function() {
         return;
       }
 
-      controls = new THREE.DeviceOrientationControls(camera, true);
-      controls.connect();
-      controls.update();
-        
-      element.addEventListener('click', fullscreen, false);
+    controls = new THREE.DeviceOrientationControls(camera, true);
+    controls.connect();
+    camera.updateProjectionMatrix();
+    controls.update();
+      
+    element.addEventListener('click', fullscreen, false);
 
-      window.removeEventListener('deviceorientation', setOrientationControls, true);
+    window.removeEventListener('deviceorientation', setOrientationControls, true);
     }
     window.addEventListener('deviceorientation', setOrientationControls, true);
 
 
-
     // now add the camera to the scene
     // and the WebGL context to the DOM
-   scene.add(camera);
    document.body.appendChild(renderer.domElement);
 
     // do everything else
@@ -333,9 +333,14 @@ function fullscreen() {
        * Called when the browser resizes
        */
       onResize: function() {
-        camera.aspect = window.innerWidth / window.innerHeight;
+        var width = container.offsetWidth;
+        var height = container.offsetHeight;
+
+        camera.aspect = width / height;
         camera.updateProjectionMatrix();
-        renderer.setSize( window.innerWidth, window.innerHeight );
+
+        renderer.setSize(width, height);
+        effect.setSize(width, height);
       },
 
       /**
@@ -538,7 +543,7 @@ function fullscreen() {
     // sin + cos = a circle
     // cameraOrbit           += CAMERA_ORBIT;
     // camera.position.x     = Math.sin(cameraOrbit) * DEPTH;
-    camera.position.z     = Math.cos(cameraOrbit) * DEPTH;
+    // camera.position.z     = Math.cos(cameraOrbit) * DEPTH;
     // camera.lookAt(ORIGIN);
 
     // update the front light position to
