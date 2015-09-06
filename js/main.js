@@ -50,9 +50,9 @@ function updateWaves(rawWaves) {
     tempWave = waves.pop();
     cnt++;
      for (var attribute in tempWave) {
-        var deg2 = tempWave[attribute].var2 / 1000;
+        var deg2 = tempWave[attribute].var2 / 5000;
         deg4 = tempWave[attribute].var4 / 1000;
-        deg7 = tempWave[attribute].var7 / 200;
+        deg7 = tempWave[attribute].var7 / 5000;
         lastWave = deg2;
         // lastWave = new THREE.Vector3(deg4, deg4, deg4);
         scaleVals();
@@ -71,7 +71,9 @@ function scaleVals() {
     // vertices_of_sphere[7].add(lastWave);
 
     pointLight.color.r = lastWave; 
-    ambLight.color.b = deg7;
+    // ambLight.color.r = deg7;
+    ambLight.color.g = deg7;
+    // ambLight.color.b = deg7;
     renderer.render(scene, camera);
     effect.render(scene, camera);
   }
@@ -97,7 +99,7 @@ scene.add(camera);
         sphere = new THREE.Mesh( geometry, material );
         vertices_of_sphere = []
 //        var vert_temp_array = [];
-        var constant = Math.round(sphere.geometry.vertices.length/8);
+        var constant = Math.round(sphere.geometry.vertices.length/10);
 //        console.log(constant);
         for (var i = 0; i<=sphere.geometry.vertices.length; i+=constant) {
             vertices_of_sphere.push(sphere.geometry.vertices[i])
@@ -124,6 +126,7 @@ scene.add(camera);
 
         
         renderer = new THREE.WebGLRenderer();
+
         element = renderer.domElement;
         container = document.getElementById('webglviewer');
         container.appendChild(element);
@@ -208,6 +211,9 @@ var elapsedSeconds = clock.getElapsedTime(),
     var unit_5 = vertices_of_sphere[5].clone().normalize();
     var unit_6 = vertices_of_sphere[6].clone().normalize();
     var unit_7 = vertices_of_sphere[7].clone().normalize();
+    var unit_8 = vertices_of_sphere[8].clone().normalize();
+    var unit_9 = vertices_of_sphere[9].clone().normalize();
+   
 
     vertices_of_sphere[0].add(unit_0.multiplyScalar(temp));
     vertices_of_sphere[1].add(unit_1.multiplyScalar(temp));
@@ -216,7 +222,10 @@ var elapsedSeconds = clock.getElapsedTime(),
     vertices_of_sphere[4].add(unit_4.multiplyScalar(temp));
     vertices_of_sphere[5].add(unit_5.multiplyScalar(temp));
     vertices_of_sphere[6].add(unit_6.multiplyScalar(temp));
-    vertices_of_sphere[6].add(unit_7.multiplyScalar(temp));
+    vertices_of_sphere[7].add(unit_7.multiplyScalar(temp));
+    vertices_of_sphere[8].add(unit_8.multiplyScalar(temp));
+    vertices_of_sphere[9].add(unit_9.multiplyScalar(temp));
+  
   }
 
 
