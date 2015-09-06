@@ -7,6 +7,8 @@ var scene,
           controls,
           clock,
         sphere,
+        vertices_of_sphere,
+        
 
           // Particles
           particles = new THREE.Object3D(),
@@ -28,7 +30,7 @@ var scene,
         
           
           // Create a sphere to make visualization easier.
-        var geometry = new THREE.SphereGeometry(10,32,32);
+        var geometry = new THREE.IcosahedronGeometry( 30, 1);
         var material = new THREE.MeshPhongMaterial({
             color: 0x333333,
             wireframe: false,
@@ -37,11 +39,22 @@ var scene,
         });
         
         sphere = new THREE.Mesh( geometry, material );
-        sphere.position.set(0, 1, 25);
+        vertices_of_sphere = []
+//        var vert_temp_array = [];
+        var constant = Math.round(sphere.geometry.vertices.length/8);
+//        console.log(constant);
+        for (var i = 0; i<=sphere.geometry.vertices.length; i+=constant) {
+            vertices_of_sphere.push(sphere.geometry.vertices[i])
+//            console.log(i);
+        }
+        
+        console.log(vertices_of_sphere);
+        
+        sphere.position.set(0, 0, 0);
           
         scene.add( sphere );
-          sphere.castShadow = true;
-          sphere.receiveShadow = true;
+        sphere.castShadow = true;
+        sphere.receiveShadow = true;
           
         var pointLight = new THREE.PointLight( 0xDDDDDD, 2.0 ); // soft white light
         pointLight.position.x = 60;
@@ -49,7 +62,7 @@ var scene,
         pointLight.position.z = 60;
         scene.add(pointLight);
           
-        var ambLight = new THREE.AmbientLight( 0x404040, 1.0 ); // soft white light
+        var ambLight = new THREE.AmbientLight( 0xDDDDDD, 1.0 ); // soft white light
 
         scene.add(ambLight);
 
@@ -235,6 +248,32 @@ var scene,
 
           lastColorRange = currentColorRange;
         }
+          
+          temp = Math.random() < 0.5 ? -1 : 1;
+          console.log(temp);
+          
+          console.log(vertices_of_sphere.length);
+                vertices_of_sphere[0].x += temp;
+                vertices_of_sphere[0].y += temp;
+                vertices_of_sphere[0].z += temp;
+                vertices_of_sphere[1].x += temp;
+                vertices_of_sphere[1].y += temp;
+                vertices_of_sphere[1].z += temp;
+                vertices_of_sphere[2].x += temp;
+                vertices_of_sphere[2].y += temp;
+                vertices_of_sphere[2].z += temp;
+                vertices_of_sphere[3].x += temp;
+                vertices_of_sphere[3].y += temp;
+                vertices_of_sphere[3].z += temp;
+                vertices_of_sphere[4].x += temp;
+                vertices_of_sphere[4].y += temp;
+                vertices_of_sphere[4].z += temp;
+                vertices_of_sphere[5].x += temp;
+                vertices_of_sphere[5].y += temp;
+                vertices_of_sphere[5].z += temp;
+                vertices_of_sphere[6].x += temp;
+                vertices_of_sphere[6].y += temp;
+                vertices_of_sphere[6].z += temp;
 
         requestAnimationFrame(animate);
 
@@ -256,10 +295,12 @@ var scene,
 
       function update(dt) {
         resize();
+        
+
 
         camera.updateProjectionMatrix();
-
         controls.update(dt);
+        sphere.geometry.verticesNeedUpdate = true;
       }
 
     var angle = 1;
@@ -267,14 +308,16 @@ var scene,
      var newValx;
 
       function render(dt) {
-
+          
+          sphere.rotateY(0.01);
+          
           angle++;
           if (angle > 360){ angle = 1;}
           newVal = (Math.cos(angle%30 * Math.PI/180));
           newValx = (Math.sin(angle * Math.PI/180));
-//       console.log(newValx, newVal);
           sphere.position.set(newVal, newValx, 0);
           effect.render(scene, camera);
+          
       }
 
       function fullscreen() {
